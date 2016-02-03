@@ -21,6 +21,8 @@ fi
 
 cd ${DIR_NAME}
 sudo docker build -t ${DOCKER_IMAGE} .
+sudo docker stop ${DOCKER_CONTAINER}
+sudo docker rm ${DOCKER_CONTAINER}
 sudo docker run -d -p ${HOST_PORT}:80 --name ${DOCKER_CONTAINER} \
 	-v ${APPLICATION_DIR}:/data/www/website \
 	${DOCKER_IMAGE} 
