@@ -6,7 +6,7 @@ APP_DIR_NAME="app"
 APP_DOCKER_ADDR="git@github.com:YiQiZhang/docker-laravel-app.git"
 APP_IMAGE="jerrytechtree/docker-laravel-app"
 APP_CONTAINER="app-file"
-APP_REPOSITORY="git@github.com:YiQiZhang/docker-laravel-test-app.git"
+APP_REPOSITORY_ADDR="git@github.com:YiQiZhang/docker-laravel-test-app.git"
 
 WEBSERVER_DIR_NAME="nginx"
 WEBSERVER_DOCKER_ADDR="git@github.com:YiQiZhang/docker-laravel-nginx.git"
@@ -41,4 +41,4 @@ cache:
 clean:
 	rm -rf $(BASE_DIR_NAME) $(APP_DIR_NAME) $(WEBSERVER_DIR_NAME) 
 
-.PHONY: clean webserver php7 db cache system application
+.PHONY: clean base webserver php7 db cache system application
