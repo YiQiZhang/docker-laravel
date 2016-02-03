@@ -4,6 +4,7 @@ NGINX_VERSION="nginx-1.9.10"
 WEBSERVER_IMAGE="jerrytechtree/docker-laravel-nginx"
 WEBSERVER_DOCKER_CONTAINER="webserver"
 WEBSERVER_LISTEN_PORT="80"
+WEBSERVER_LOG_DIR="/var/log/docker-laravel"
 APPLICATION_DIR="platform"
 
 all: system application
@@ -11,7 +12,7 @@ all: system application
 system: webserver php7 db cache
 
 webserver:
-	./webserver.sh $(WEBSERVER_DIR_NAME) $(WEBSERVER_REPOSITORY_ADDR) $(NGINX_VERSION) $(WEBSERVER_IMAGE) $(WEBSERVER_DOCKER_CONTAINER) $(WEBSERVER_LISTEN_PORT) $(APPLICATION_DIR)	
+	./webserver.sh $(WEBSERVER_DIR_NAME) $(WEBSERVER_REPOSITORY_ADDR) $(NGINX_VERSION) $(WEBSERVER_IMAGE) $(WEBSERVER_DOCKER_CONTAINER) $(WEBSERVER_LISTEN_PORT) $(APPLICATION_DIR) $(WEBSERVER_LOG_DIR)	
 
 php7:
 	echo 'php7'
