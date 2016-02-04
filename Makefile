@@ -14,7 +14,14 @@ NGINX_VERSION="nginx-1.9.10"
 WEBSERVER_IMAGE="jerrytechtree/docker-laravel-nginx"
 WEBSERVER_CONTAINER="webserver"
 WEBSERVER_LISTEN_PORT="80"
-WEBSERVER_LOG_DIR="/var/log/docker-laravel"
+WEBSERVER_LOG_DIR="/var/log/docker-laravel/nginx"
+
+PHP_DIR_NAME="php"
+PHP_DOCKER_ADDR="git@github.com:YiQiZhang/docker-laravel-php7.git"
+PHP_IMAGE="jerrytechtree/docker-laravel-php7"
+PHP_CONTAINER="php7"
+PHP_VERSION="php-7.0.2"
+PHP_LOG_PATH="/var/log/docker-laravel/php"
 
 all: system
 
@@ -30,7 +37,7 @@ webserver:
 	./webserver.sh $(WEBSERVER_DIR_NAME) $(WEBSERVER_DOCKER_ADDR) $(NGINX_VERSION) $(WEBSERVER_IMAGE) $(WEBSERVER_CONTAINER) $(WEBSERVER_LISTEN_PORT) $(WEBSERVER_LOG_DIR) $(APP_CONTAINER)	
 
 php7:
-	echo 'php7'
+	./php7.sh $(PHP_DIR_NAME) $(PHP_DOCKER_ADDR) $(PHP_IMAGE) $(PHP_CONTAINER) $(PHP_VERSION) $(PHP_LOG_PATH) $(APP_CONTAINER)
 
 db:
 	echo 'mysql'
