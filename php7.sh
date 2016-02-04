@@ -7,6 +7,8 @@ DOCKER_CONTAINER=$4
 PHP_VERSION=$5
 LOG_PATH=$6
 APP_CONTAINER=$7
+DB_CONTAINER=$8
+CACHE_CONTAINER=$9
 PHP_TAR_NAME="${PHP_VERSION}.tar.gz"
 PHP_TAR_DIR="${DIR_NAME}/software"
 PHP_TAR_FILE="${PHP_TAR_DIR}/${PHP_TAR_NAME}"
@@ -24,14 +26,16 @@ if [ ! -f ${PHP_TAR_FINAL_FILE} ]; then
 fi 
 
 if [ ! -d ${LOG_PATH} ]; then
-  mkdir -p ${LOG_PATH}
+  sudo mkdir -p ${LOG_PATH}
 fi
 
 cd ${DIR_NAME}
 sudo docker build -t ${DOCKER_IMAGE} .
 sudo docker stop ${DOCKER_CONTAINER}
 sudo docker rm ${DOCKER_CONTAINER}
-sudo docker run -d --name ${DOCKER_CONTAINER} \
+sudo docker run -ti --name ${DOCKER_CONTAINER} \
+	--link ${DB_CONTAINER} \
+	--link ${CACHE_CONTAINER} \
 	--volumes-from ${APP_CONTAINER} \
 	-v ${LOG_PATH}:/var/log/php \
-	${DOCKER_IMAGE} 
+	${DOCKER_IMAGE}

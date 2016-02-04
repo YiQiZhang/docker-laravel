@@ -21,7 +21,7 @@ if [ ! -f ${NGINX_TAR_FINAL_FILE} ]; then
 fi 
 
 if [ ! -d ${LOG_PATH} ]; then
-  mkdir -p ${LOG_PATH}
+  sudo mkdir -p ${LOG_PATH}
 fi
 
 cd ${DIR_NAME}
