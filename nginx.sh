@@ -8,6 +8,7 @@ DOCKER_CONTAINER=$5
 HOST_PORT=$6
 LOG_PATH=$7
 APP_CONTAINER=$8
+PHP_CONTAINER=$9
 NGINX_TAR_NAME="${NGINX_VERSION}.tar.gz"
 NGINX_TAR_DIR="${DIR_NAME}/software"
 NGINX_TAR_FILE="${NGINX_TAR_DIR}/${NGINX_TAR_NAME}"
@@ -29,6 +30,7 @@ sudo docker build -t ${DOCKER_IMAGE} .
 sudo docker stop ${DOCKER_CONTAINER}
 sudo docker rm ${DOCKER_CONTAINER}
 sudo docker run -d -p ${HOST_PORT}:80 --name ${DOCKER_CONTAINER} \
+	--link ${PHP_CONTAINER}:phpfpm \
 	--volumes-from ${APP_CONTAINER} \
 	-v ${LOG_PATH}:/var/log/nginx \
 	${DOCKER_IMAGE} 

@@ -16,7 +16,7 @@ WEBSERVER_CONTAINER="webserver"
 WEBSERVER_LISTEN_PORT="8888"
 WEBSERVER_LOG_DIR="/data/log/nginx"
 
-PHP_DIR_NAME="php"
+PHP_DIR_NAME="php7"
 PHP_DOCKER_ADDR="git@github.com:YiQiZhang/docker-laravel-php7.git"
 PHP_IMAGE="jerrytechtree/docker-laravel-php7"
 PHP_CONTAINER="php7"
@@ -30,6 +30,7 @@ MYSQL_CONTAINER="db"
 MYSQL_DATA_PATH="/data/mysql"
 MYSQL_LOG_PATH="/data/log/mysql"
 MYSQL_ROOT_PASSWORD="secret"
+MYSQL_EXPOSE_PORT="33061"
 
 REDIS_DIR_NAME="redis"
 REDIS_DOCKER_ADDR="git@github.com:YiQiZhang/docker-laravel-redis.git"
@@ -37,7 +38,7 @@ REDIS_IMAGE="jerrytechtree/docker-laravel-redis"
 REDIS_CONTAINER="cache"
 REDIS_DATA_PATH="/data/redis"
 
-all: system
+all: application webserver
 
 base:
 	./base.sh $(BASE_DIR_NAME) $(BASE_DOCKER_ADDR) $(BASE_IMAGE)
@@ -45,21 +46,19 @@ base:
 application: base
 	./application.sh $(APP_DIR_NAME) $(APP_DOCKER_ADDR) $(APP_IMAGE) $(APP_CONTAINER) $(APP_REPOSITORY_ADDR)
 
-system: application webserver php7 cache
+webserver: base php7
+	./nginx.sh $(WEBSERVER_DIR_NAME) $(WEBSERVER_DOCKER_ADDR) $(NGINX_VERSION) $(WEBSERVER_IMAGE) $(WEBSERVER_CONTAINER) $(WEBSERVER_LISTEN_PORT) $(WEBSERVER_LOG_DIR) $(APP_CONTAINER)	$(PHP_CONTAINER)
 
-webserver: base
-	./webserver.sh $(WEBSERVER_DIR_NAME) $(WEBSERVER_DOCKER_ADDR) $(NGINX_VERSION) $(WEBSERVER_IMAGE) $(WEBSERVER_CONTAINER) $(WEBSERVER_LISTEN_PORT) $(WEBSERVER_LOG_DIR) $(APP_CONTAINER)	
-
-php7: base db
+php7: base db cache
 	./php7.sh $(PHP_DIR_NAME) $(PHP_DOCKER_ADDR) $(PHP_IMAGE) $(PHP_CONTAINER) $(PHP_VERSION) $(PHP_LOG_PATH) $(APP_CONTAINER) $(MYSQL_CONTAINER) $(REDIS_CONTAINER)
 
 db: base
-	./mysql.sh $(MYSQL_DIR_NAME) $(MYSQL_DOCKER_ADDR) $(MYSQL_IMAGE) $(MYSQL_CONTAINER) $(MYSQL_DATA_PATH) $(MYSQL_LOG_PATH) $(MYSQL_ROOT_PASSWORD)
+	./mysql.sh $(MYSQL_DIR_NAME) $(MYSQL_DOCKER_ADDR) $(MYSQL_IMAGE) $(MYSQL_CONTAINER) $(MYSQL_DATA_PATH) $(MYSQL_LOG_PATH) $(MYSQL_ROOT_PASSWORD) $(MYSQL_EXPOSE_PORT)
 
 cache:
 	./redis.sh $(REDIS_DIR_NAME) $(REDIS_DOCKER_ADDR) $(REDIS_IMAGE) $(REDIS_CONTAINER) $(REDIS_DATA_PATH)
 
 clean:
-	rm -rf $(BASE_DIR_NAME) $(APP_DIR_NAME) $(WEBSERVER_DIR_NAME) 
+	rm -rf $(BASE_DIR_NAME) $(APP_DIR_NAME) $(WEBSERVER_DIR_NAME) $(PHP_DIR_NAME) $(MYSQL_DIR_NAME) $(REDIS_DIR_NAME)
 
 .PHONY: clean base webserver php7 db cache system application

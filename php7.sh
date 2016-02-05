@@ -33,9 +33,9 @@ cd ${DIR_NAME}
 sudo docker build -t ${DOCKER_IMAGE} .
 sudo docker stop ${DOCKER_CONTAINER}
 sudo docker rm ${DOCKER_CONTAINER}
-sudo docker run -ti --name ${DOCKER_CONTAINER} \
-	--link ${DB_CONTAINER} \
-	--link ${CACHE_CONTAINER} \
+sudo docker run -d --name ${DOCKER_CONTAINER} \
+	--link ${DB_CONTAINER}:db \
+	--link ${CACHE_CONTAINER}:redis \
 	--volumes-from ${APP_CONTAINER} \
 	-v ${LOG_PATH}:/var/log/php \
 	${DOCKER_IMAGE}

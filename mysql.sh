@@ -6,7 +6,8 @@ DOCKER_IMAGE=$3
 DOCKER_CONTAINER=$4
 DATA_PATH=$5
 LOG_PATH=$6
-MYSQL_PASSWORD=$7
+ROOT_PASSWORD=$7
+EXPOSE_PORT=$8
 
 ./updateRepository.sh ${DIR_NAME} ${REPOSITORY_ADDR}
 
@@ -22,9 +23,9 @@ cd ${DIR_NAME}
 sudo docker build -t ${DOCKER_IMAGE} .
 sudo docker stop ${DOCKER_CONTAINER}
 sudo docker rm ${DOCKER_CONTAINER}
-sudo docker run -d --name ${DOCKER_CONTAINER} \
+sudo docker run -d -p ${EXPOSE_PORT}:3306 --name ${DOCKER_CONTAINER} \
 	-v ${DATA_PATH}:/var/lib/mysql \
 	-v $PWD/conf:/etc/mysql/conf.d \
 	-v ${LOG_PATH}:/var/log/mysql \
-	-e MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD} \
+	-e MYSQL_ROOT_PASSWORD=${ROOT_PASSWORD} \
 	${DOCKER_IMAGE} 
